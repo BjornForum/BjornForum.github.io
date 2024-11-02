@@ -3,19 +3,21 @@ title: "Research"
 ---
 
 ## Articles and Book Chapters
-1. Askim, Jostein; Forum, Bjørn Mo & Tranøy, Bent Sofus (2024). The party politics of policy endurance: parliamentary settlements in Norway, 1980-2021. I Lucas, Patrick; Nabatchi, Tina; O’Flynn, Janine & ’t Hart, Paul (Red.), Pathways to Positive Public Administration. Edward Elgar Publishing. ISSN 9781803929163. doi: [10.4337/9781803929170.00034](https://doi.org/10.4337/9781803929170.00034)
+1. Bach, T., Forum, B. M., & Hesstvedt, S. (Forthcoming). Norway: Formal and informal politicization in a
+merit bureaucracy. In Handbook of Politicization and Political Patronage, edited by B. Guy Peters, Colin
+Knox, Francesco Panizza, Conrado Ramos, and Katarína Staroňová. Palgrave Macmillan.
+
+2. Askim, Jostein; Forum, Bjørn Mo & Tranøy, Bent Sofus (2024). The party politics of policy endurance: parliamentary settlements in Norway, 1980-2021. I Lucas, Patrick; Nabatchi, Tina; O’Flynn, Janine & ’t Hart, Paul (Red.), Pathways to Positive Public Administration. Edward Elgar Publishing. ISSN 9781803929163. doi: [10.4337/9781803929170.00034](https://doi.org/10.4337/9781803929170.00034){target="_blank"}
 
 
 ## Working Papers
 1. Forum, B. M. & Hesstvedt, S. Partisan Appointees to Government Commissions in Norway 1972-2018.
-[Working Paper]
 
 2. Forum, B. M., Askim, J., & Mangset, M. Restraining Politics: The development of a meritocratic
-appointment system, Norway 1660-2023. [Working Paper]
+appointment system, Norway 1660-2023. [Working paper version presented at NoPSA 2024](Forum_Askim_Mangset_Appointment_Norms_NoPSA_2024.pdf){target="_blank"}
 
-3. Rasch, B.E., Forum B. M. & Bucur C. Portfolio Allocation in Parliamentary Governments. [Working
-Paper](Rasch_et_al_Portfolio_Allocation_August_2023.pdf)
+3. Rasch, B.E., Forum B. M. & Bucur C. Portfolio Allocation in Parliamentary Governments. [Working paper version presented at ECPR 2024](Rasch_et_al_Portfolio_Allocation_August_2023.pdf){target="_blank"}
 
 4. Forum, B. M. Bureaucratic Turnover Under New Governments: The moderating effects of organizational
-buffering. [Working Paper]
+buffering. [Working Paper](Forum_BM_Bureaucratic Turnover Under New Governments_2024-10-23.pdf){target="_blank"}
 
