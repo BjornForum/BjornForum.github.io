@@ -2,7 +2,7 @@
 title: "Hello"
 description: "World"
 author: "Bjørn Mo Forum"
-date: "2024-11-03"
+date: "1900-01-01"
 categories:
   - hello
   - world
