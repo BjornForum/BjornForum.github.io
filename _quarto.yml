@@ -6,6 +6,8 @@ website:
   title: "Bjørn Mo Forum"
   description: "Bjørn Mo Forum is a Doctoral Research Fellow at the Department of Political Science at the University of Oslo. His research focuses on cabinet decision-making and appointments in parliamentary democracies."
   navbar:
+    background: primary
+    search: true
     left:
       - href: index.qmd
         text: "About"
@@ -15,6 +17,16 @@ website:
         text: "CV"
       - href: data/data.qmd
         text: "Data"
+        
+    tools:
+      - icon: X
+        href: https://x.com/BjornForum
+      - icon: person-workspace
+        menu:
+        - text: UiO (nor)
+          url: https://www.sv.uio.no/isv/personer/vit/bjormf/
+        - text: UiO (eng)
+          url: https://www.sv.uio.no/isv/english/people/aca/bjormf
 
 format:
   html:
