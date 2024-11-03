@@ -5,31 +5,48 @@ project:
 website:
   title: "Bjørn Mo Forum"
   description: "Bjørn Mo Forum is a Doctoral Research Fellow at the Department of Political Science at the University of Oslo. His research focuses on cabinet decision-making and appointments in parliamentary democracies."
+  
+  page-footer: 
+    right: 
+      - icon: github
+        href: https://github.com/BjornForum
+      - icon: twitter 
+        href: https://twitter.com/BjornForum
+      - icon: app
+        href: https://bsky.app/profile/bjornforum.bsky.social
+      - icon: linkedin
+        href: https://www.linkedin.com/in/bj%C3%B8rn-mo-forum-b62009190/
+      - icon: envelope
+        href: mailto:b.m.forum@stv.uio.no
+        
   navbar:
     background: primary
     search: true
+
     left:
       - href: index.qmd
         text: "About"
-      - href: research/research.qmd
-        text: "Research"
       - href: cv/cv.qmd
         text: "CV"
+      - href: research/research.qmd
+        text: "Research"
       - href: data/data.qmd
         text: "Data"
-        
-    tools:
-      - icon: X
-        href: https://x.com/BjornForum
+      - href: blog/blog.qmd
+        text: "Blog"
+
+    right:
       - icon: person-workspace
         menu:
-        - text: UiO (nor)
-          url: https://www.sv.uio.no/isv/personer/vit/bjormf/
-        - text: UiO (eng)
-          url: https://www.sv.uio.no/isv/english/people/aca/bjormf
+        - text: "UiO (nor)"
+          href: https://www.sv.uio.no/isv/personer/vit/bjormf/
+        - text: "UiO (eng)"
+          href: https://www.sv.uio.no/isv/english/people/aca/bjormf
 
 format:
   html:
-    theme: cosmo
+    theme: 
+      dark: darkly
+      light: cosmo
     css: styles.css
     toc: true

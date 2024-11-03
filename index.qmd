@@ -1,5 +1,5 @@
 ---
-title: "Bjørn Mo Forum"
+title: "About"
 ---
 
 ![](bmf.jpg){width="310"}

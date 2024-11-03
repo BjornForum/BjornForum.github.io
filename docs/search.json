@@ -1,5 +1,19 @@
 [
   {
+    "objectID": "blog/blog.html",
+    "href": "blog/blog.html",
+    "title": "Blog",
+    "section": "",
+    "text": "Hello\n\n\n\n\n\n\n\nhello\n\n\nworld\n\n\n\n\nWorld\n\n\n\n\n\n\nNov 3, 2024\n\n\nBjørn Mo Forum\n\n\n\n\n\n\nNo matching items"
+  },
+  {
+    "objectID": "blog/posts/test/index.html",
+    "href": "blog/posts/test/index.html",
+    "title": "Hello",
+    "section": "",
+    "text": "Hello World."
+  },
+  {
     "objectID": "cv/cv.html",
     "href": "cv/cv.html",
     "title": "Curriculum Vitæ",
@@ -16,7 +30,7 @@
   {
     "objectID": "index.html",
     "href": "index.html",
-    "title": "Bjørn Mo Forum",
+    "title": "About",
     "section": "",
     "text": "Bjørn Mo Forum is a Doctoral Research Fellow at the Department of Political Science at the University of Oslo. His research focuses on cabinet decision-making and appointments in parliamentary democracies."
   },
