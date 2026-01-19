@@ -1,12 +1,12 @@
 ---
 title: Curriculum Vitæ
 description: "Bjørn Mo Forum's CV"
-date: 2024-08-10
+date: 2026-01-19
 published-title: CV last updated
 engine: knitr
 freeze: false
 cv:
-  pdf: "Forum_CV_ENG_2024.pdf"
+  pdf: "Forum_CV_ENG_2026.pdf"
 ---
 
 ```{css, echo=FALSE}

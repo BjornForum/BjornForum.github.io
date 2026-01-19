@@ -1,1 +1,7 @@
-To be added
+Links to datasets and dashboards on Norwegian governments, ministers, political appointees and senior bureaucrats is coming soon..
+
+![](numberofseniorbureaucrats.png){}
+
+![](sequence_year_3pos.png){}
+
+![](education.png){}

@@ -5,3 +5,4 @@ title: "About"
 ![](bmf.jpg){width="310"}
 
 Bjørn Mo Forum is a Doctoral Research Fellow at the Department of Political Science at the University of Oslo. His research focuses on cabinet decision-making and appointments in parliamentary democracies.
+
