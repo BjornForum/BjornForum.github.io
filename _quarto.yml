@@ -11,8 +11,8 @@ website:
       - icon: github
         href: https://github.com/BjornForum
       - icon: twitter 
-        href: https://twitter.com/BjornForum
-      - icon: app
+        href: https://bsky.app/profile/bjornforum.bsky.social
+      - icon: cloud-sun
         href: https://bsky.app/profile/bjornforum.bsky.social
       - icon: linkedin
         href: https://www.linkedin.com/in/bj%C3%B8rn-mo-forum-b62009190/
@@ -32,6 +32,8 @@ website:
         text: "Research"
       - href: data/data.qmd
         text: "Data"
+      - href: teaching/teaching.qmd
+        text: "Teaching"
       - href: blog/blog.qmd
         text: "Blog"
 

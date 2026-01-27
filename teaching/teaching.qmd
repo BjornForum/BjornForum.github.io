@@ -1,0 +1,138 @@
+---
+title: "Teaching"
+---
+
+
+## STV4436 – Politikk og forvaltning i sentraladministrasjonen
+### Lecture slides
+- Rekruttering av topplederne i forvaltningen: mellom meritokrati og politisering [27.01.2026](Forelesning_5_27.01.2026_STV4436.pdf){target="_blank"}
+  - Innsamling av karrieredata på toppbyråkrater: Tips og Triks [27.01.2026](Forelesning_5_Ekstramateriale_innsamling av karrieredata på toppbyråkrater_STV4436.pdf){target="_blank"}
+
+### Datasets
+- [Norwegian Politicians](all_politicians.RDS){target="_blank"}: An individual level dataset of 244,430 political experience (minister, state secretary, political advisor, parliamentarian candidates, local and regional candidates).
+
+```{=html}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Datasets Overview Table</title>
+    <style>
+        body {
+            font-family: 'Times New Roman', Times, serif;
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .table-container {
+            overflow-x: auto;
+            margin: 20px 0;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+        
+        caption {
+            caption-side: top;
+            text-align: left;
+            font-weight: bold;
+            padding: 10px 0;
+            font-size: 15px;
+        }
+        
+        th {
+            font-weight: bold;
+            text-align: left;
+            padding: 10px 8px;
+            border-top: 2px solid #000;
+            border-bottom: 1px solid #000;
+        }
+        
+        td {
+            padding: 10px 8px;
+            vertical-align: top;
+            border-bottom: 1px solid #ccc;
+        }
+        
+        tr:last-child td {
+            border-bottom: 2px solid #000;
+        }
+        
+        sup {
+            font-size: 0.8em;
+        }
+        
+        .footnotes {
+            margin-top: 15px;
+            font-size: 12px;
+            line-height: 1.5;
+        }
+        
+        .footnote {
+            margin-bottom: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="table-container">
+        <table id="tab:datasets">
+            <caption> Overview of datasets included in the Norwegian Politicians dataset </caption>
+            <thead>
+                <tr>
+                    <th>Dataset</th>
+                    <th>Years</th>
+                    <th>N (individuals)</th>
+                    <th>Description</th>
+                    <th>Variables</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Forum, B. M. Bureaucratic Turnover Under New Governments: The Moderating Effect of Bureaucratic and Political Layering </td>
+                    <td>1884-2024</td>
+                    <td>1,763</td>
+                    <td>All cabinet ministers, state secretaries,<br>and political advisors in the ministries.</td>
+                    <td>Name, birthyear, occupation &<br>party</td>
+                </tr>
+                <tr>
+                    <td>Fiva, J. H. and D. M. Smith (2025): ’Norwegian Parliamentary Elections, 1906 - 2025’</td>
+                    <td>1906-2021</td>
+                    <td>41,846</td>
+                    <td>All running and elected candidates in parliam-<br>entary elections.<sup>2</sup></td>
+                    <td>Name, birthyear, occupation,<br>party & municipality</td>
+                </tr>
+                <tr>
+                    <td>Fiva, J. H., R. J. Sørensen and R. Vøllo (2025): ’Local Candidate Dataset’ </td>
+                    <td>1971-2023</td>
+                    <td>27,374</td>
+                    <td>All elected candidates in county elections and<br>(deputy) mayors.<sup>3</sup></td>
+                    <td>Name, birthyear, occupation,<br>party & municipality</td>
+                </tr>
+                <tr>
+                    <td>Fiva, J. H., R. J. Sørensen and R. Vøllo (2025): ’Local Candidate Dataset’ </td>
+                    <td>2003-2023</td>
+                    <td>200,908</td>
+                    <td>All running and elected candidates in local and<br>county elections.</td>
+                    <td>Name, birthyear, party &<br>municipality</td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <div class="footnotes">
+            <div class="footnote"><sup>1</sup> The full name of non-elected candidates are only available for female candidates (and more prolific male candidates) until 1957. Birthyear is only available for the elected candidates.</div>
+            <div class="footnote"><sup>2</sup> Incomplete list of non-elected candidates prior to 2003 (about 50% of candidates)</div>
+        </div>
+    </div>
+</body>
+</html>
+
+
+```
+- [Offisielt frå statsrådet](offisielt_fra_s.rad_raw_2025-01-08.RDS){target="_blank"}: A dataset containing the text from the minutes from Council of State (1994--2025). Extracted from: https://www.regjeringen.no/no/aktuelt/offisielt-fra-statsrad/offisielt-fra-statsrad1/id30297/
+- [Etatslederutnevnelser](etatsledere_1990-2021.xlsx){target="_blank"}: A dataset containing all agency heads appointed in the Council of State (1994--2021)
+- [Senior Bureaucrats in Norwegian Ministries](https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/IUXUPR){target="_blank"}: Data on All Level 1 and Level 2 Bureaucrats (Ekspedisjonssjefer, Assisterende Departementsråder and Departementsråder) and cabinet ministers, state secretaries, and political advisors in the ministries (1884-2024).
+- [Etater](Norge_underliggende_virksomheter_1814-2024.xlsx){target="_blank"}: Dataset containing informaton about all Norwegian Agencies until 2024. Extracted from https://forvaltningsdatabasen.sikt.no/

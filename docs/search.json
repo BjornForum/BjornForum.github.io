@@ -18,7 +18,7 @@
     "href": "research/research.html",
     "title": "Research",
     "section": "",
-    "text": "Forum, B. M. (Forthcoming). Norway: Either Political or Bureaucratic Career Paths (COST Action CoREx, WG-2 on Careers, Norway Country Report).\nRasch, B.E., Forum B. M. & Bucur C. (2026). Parliamentary institutions and portfolio allocation in coali tion governments. In Democracy at the Crossroads– Challenges for Governance and Representation: Essays in Honour of Thomas Saalfeld, edited by Jorge M. Fernandes, Javier Martínez-Cantó. Routledge.\nBach, T., Forum, B. M., & Hesstvedt, S. (2025). Norway: Formal and informal politicization in a merit bureaucracy. In Handbook of Politicization and Political Patronage, edited by B. Guy Peters, Colin Knox, Francesco Panizza, Conrado Ramos, and Katarína Staroňová. Edward Elgar Publishing. doi: 10.4337/9781035326242.00012\nAskim, Jostein; Forum, Bjørn Mo & Tranøy, Bent Sofus (2024). The party politics of policy endurance: parliamentary settlements in Norway, 1980-2021. I Lucas, Patrick; Nabatchi, Tina; O’Flynn, Janine & ’t Hart, Paul (Red.), Pathways to Positive Public Administration. Edward Elgar Publishing. ISSN 9781803929163. doi: 10.4337/9781803929170.00034"
+    "text": "Forum, B. M. (Forthcoming). Norway: Minister or Messenger? Two Career Paths in the Executive Triangle (COST Action CoREx, WG-2 on Careers, Norway Country Report).\nRasch, B.E., Forum B. M. & Bucur C. (2026). Parliamentary institutions and portfolio allocation in coalition governments. In Democracy at the Crossroads– Challenges for Governance and Representation: Essays in Honour of Thomas Saalfeld, edited by Jorge M. Fernandes, Javier Martínez-Cantó. Routledge.\nBach, T., Forum, B. M., & Hesstvedt, S. (2025). Norway: Formal and informal politicization in a merit bureaucracy. In Handbook of Politicization and Political Patronage, edited by B. Guy Peters, Colin Knox, Francesco Panizza, Conrado Ramos, and Katarína Staroňová. Edward Elgar Publishing. doi: 10.4337/9781035326242.00012\nAskim, Jostein; Forum, Bjørn Mo & Tranøy, Bent Sofus (2024). The party politics of policy endurance: parliamentary settlements in Norway, 1980-2021. I Lucas, Patrick; Nabatchi, Tina; O’Flynn, Janine & ’t Hart, Paul (Red.), Pathways to Positive Public Administration. Edward Elgar Publishing. ISSN 9781803929163. doi: 10.4337/9781803929170.00034"
   },
   {
     "objectID": "research/research.html#working-papers",
@@ -32,7 +32,7 @@
     "href": "index.html",
     "title": "About",
     "section": "",
-    "text": "Bjørn Mo Forum is a Doctoral Research Fellow at the Department of Political Science at the University of Oslo. His research focuses on cabinet decision-making and appointments in parliamentary democracies."
+    "text": "Bjørn Mo Forum is a Doctoral Research Fellow at the Department of Political Science at the University of Oslo. His research focuses on cabinet decision-making and appointments in parliamentary democracies.\naaaa test"
   },
   {
     "objectID": "blog/blog.html",
@@ -40,5 +40,26 @@
     "title": "Blog",
     "section": "",
     "text": "Langsiktig politikk i andre rekke: er de brede forlikenes tid forbi?\n\n\n\n\n\n\n\nStortingsforlik\n\n\nSkatteforlik\n\n\nNorsk politikk\n\n\nStortinget\n\n\n\n\nAp er negative til forlik i Stortinget. Når reverseringsviljen er høy, bør regjeringer vokte seg for å vedta politikk på knappest mulig flertall.\n\n\n\n\n\n\nNov 4, 2024\n\n\nBjørn Mo Forum\n\n\n\n\n\n\nNo matching items"
+  },
+  {
+    "objectID": "teaching/teaching.html",
+    "href": "teaching/teaching.html",
+    "title": "Teaching",
+    "section": "",
+    "text": "Rekruttering av topplederne i forvaltningen: mellom meritokrati og politisering 27.01.2026\n\nInnsamling av karrieredata på toppbyråkrater: Tips og Triks 27.01.2026\n\n\n\n\n\n\nNorwegian Politicians: An individual level dataset of 244,430 political experience (minister, state secretary, political advisor, parliamentarian candidates, local and regional candidates).\n\n\n\n\n    \n    \n    Datasets Overview Table\n    \n\n\n    \n        \n             Overview of datasets included in the Norwegian Politicians dataset \n            \n                \n                    Dataset\n                    Years\n                    N (individuals)\n                    Description\n                    Variables\n                \n            \n            \n                \n                    Forum, B. M. Bureaucratic Turnover Under New Governments: The Moderating Effect of Bureaucratic and Political Layering \n                    1884-2024\n                    1,763\n                    All cabinet ministers, state secretaries,and political advisors in the ministries.\n                    Name, birthyear, occupation &party\n                \n                \n                    Fiva, J. H. and D. M. Smith (2025): ’Norwegian Parliamentary Elections, 1906 - 2025’\n                    1906-2021\n                    41,846\n                    All running and elected candidates in parliam-entary elections.2\n                    Name, birthyear, occupation,party & municipality\n                \n                \n                    Fiva, J. H., R. J. Sørensen and R. Vøllo (2025): ’Local Candidate Dataset’ \n                    1971-2023\n                    27,374\n                    All elected candidates in county elections and(deputy) mayors.3\n                    Name, birthyear, occupation,party & municipality\n                \n                \n                    Fiva, J. H., R. J. Sørensen and R. Vøllo (2025): ’Local Candidate Dataset’ \n                    2003-2023\n                    200,908\n                    All running and elected candidates in local andcounty elections.\n                    Name, birthyear, party &municipality\n                \n            \n        \n        \n        \n            1 The full name of non-elected candidates are only available for female candidates (and more prolific male candidates) until 1957. Birthyear is only available for the elected candidates.\n            2 Incomplete list of non-elected candidates prior to 2003 (about 50% of candidates)\n        \n    \n\n\n\n\n\nOffisielt frå statsrådet: A dataset containing the text from the minutes from Council of State (1994–2025). Extracted from: https://www.regjeringen.no/no/aktuelt/offisielt-fra-statsrad/offisielt-fra-statsrad1/id30297/\nEtatslederutnevnelser: A dataset containing all agency heads appointed in the Council of State (1994–2021)\nSenior Bureaucrats in Norwegian Ministries: Data on All Level 1 and Level 2 Bureaucrats (Ekspedisjonssjefer, Assisterende Departementsråder and Departementsråder) and cabinet ministers, state secretaries, and political advisors in the ministries (1884-2024).\nEtater: Dataset containing informaton about all Norwegian Agencies until 2024. Extracted from https://forvaltningsdatabasen.sikt.no/"
+  },
+  {
+    "objectID": "teaching/teaching.html#presentations",
+    "href": "teaching/teaching.html#presentations",
+    "title": "Teaching and Presentations",
+    "section": "Presentations",
+    "text": "Presentations"
+  },
+  {
+    "objectID": "research/research.html#masters-thesis",
+    "href": "research/research.html#masters-thesis",
+    "title": "Research",
+    "section": "Master’s Thesis",
+    "text": "Master’s Thesis\n\nForum, B. M. (2022). The Political Dynamics of Administrative Turnover: The effects of political change on the careers of top civil servants in Norwegian ministries 1884-2021 Master’s Thesis, Universitetet i Oslo. http://urn.nb.no/URN:NBN:no-98325"
   }
 ]
