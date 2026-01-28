@@ -8,15 +8,15 @@ website:
   
   page-footer: 
     right: 
-      - icon: github
+      - text: "{{< iconify uiw github >}}"
         href: https://github.com/BjornForum
-      - icon: twitter 
+      - text: "{{< iconify logos bluesky >}}"
         href: https://bsky.app/profile/bjornforum.bsky.social
-      - icon: cloud-sun
-        href: https://bsky.app/profile/bjornforum.bsky.social
-      - icon: linkedin
+      - text: "{{< iconify logos linkedin >}}"
         href: https://www.linkedin.com/in/bj%C3%B8rn-mo-forum-b62009190/
-      - icon: envelope
+      - text: "{{< iconify simple-icons googlescholar >}}"
+        href: https://scholar.google.com/citations?user=-W7ni-wAAAAJ&hl=en
+      - text: "{{< iconify material-symbols mail >}}"
         href: mailto:b.m.forum@stv.uio.no
         
   navbar:

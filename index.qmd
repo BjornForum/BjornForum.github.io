@@ -5,5 +5,12 @@ title: "About"
 ![](bmf.jpg){width="320"}
 
 
-Bjørn Mo Forum is a Doctoral Research Fellow at the Department of Political Science at the University of Oslo. His research focuses on cabinet decision-making, appointments and bureaucratic careers in parliamentary democracies.
+Welcome to my website! 
 
+My name is Bjørn Mo Forum, I am a Doctoral Research Fellow at the Department of Political Science at the University of Oslo. My research focuses on cabinet decision-making, the politics of appointments and bureaucratic careers. My research draws on quantitative methods and the collection of large-scale longitudinal datasets from Norwegian government sources, both online and archival. This work draws on quantitative methods and the collection of large-scale longitudinal datasets from Norwegian government sources, both online and archival. 
+
+In my PhD project I study the political dynamics of bureaucratic appointments in Norway. The overarching research question asks:
+
+*To what extent are political considerations made, and what are the political dynamics of government appointments to non-political positions in high-merit administrative systems?*
+
+While high-merit bureaucracies have formally depoliticized civil services where personnel decisions should be based purely on professional competence, political change and personnel changes are not independent of each other. My research investigates how governments actually make appointment decisions behind closed doors, and how institutional variation shapes these decisions. This work challenges the pastoral image of Norway as a purely meritocratic system presented in previous expert survey-based research, revealing that while not extensively politicized, pockets of political influence persist in appointment practices.
