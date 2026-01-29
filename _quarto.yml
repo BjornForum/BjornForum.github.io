@@ -3,6 +3,7 @@ project:
   output-dir: docs
 
 website:
+  google-analytics: "G-9T1C506XN5"
   title: "Bjørn Mo Forum"
   description: "Bjørn Mo Forum is a Doctoral Research Fellow at the Department of Political Science at the University of Oslo. His research focuses on cabinet decision-making and appointments in parliamentary democracies."
   
