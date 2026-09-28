@@ -8,12 +8,6 @@ library(shiny)
 library(bslib)
 library(ggplot2)
 
-# Tells the loading bar on the dashboard page how far the app has come.
-# Only used in the browser (webR); silent when the app runs in ordinary R.
-progress_step <- function(step) {
-  if (identical(R.version$os, "emscripten")) message("dashboard-progress:", step)
-}
-
 # ---------------------------------------------------------------------------
 # Data
 # On the website, dashboard.qmd embeds the four RDS files next to this app when
@@ -264,7 +258,6 @@ load_all <- function() {
        first_year = min(people$year), last_year = max(people$year))
 }
 
-progress_step("data")
 dat <- tryCatch(load_all(), error = function(e) e)
 ok <- !inherits(dat, "error")
 
@@ -1554,5 +1547,4 @@ server <- function(input, output, session) {
   }, striped = FALSE, hover = TRUE, spacing = "xs", width = "100%", na = "")
 }
 
-progress_step("app")
 shinyApp(ui, server)

@@ -1,7 +1,6 @@
 project:
   type: website
   output-dir: docs
-  pre-render: data/dashboard/build_dashboard.R
 
 website:
   google-analytics: "G-9T1C506XN5"

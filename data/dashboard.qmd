@@ -3,12 +3,248 @@ title: "Dashboard (Beta)"
 engine: markdown
 page-layout: full
 toc: false
+search: false
 filters:
+  - dashboard/embed-app.lua
   - shinylive
 ---
 
 Explore historical data on top civil servants, governments, ministers, state secretaries and political advisors in Norway. The dashboard runs in your browser, so it can take up to half a minute to load the first time. The datasets, codebook and citation are on the [Data page](data.qmd). Disclaimer: The dashboard is currently being beta-tested, so errors in visualizations and statistics may occur.
 
-<!-- The app code and data are inserted by dashboard/build_dashboard.R, which Quarto runs before every render (see pre-render in _quarto.yml). Edit dashboard/app.R, not the generated file. -->
-{{< include dashboard/_shinylive_app.md >}}
+<!--
+How this page works:
+- The dashboard itself is dashboard/app.R. Edit that file, not this page.
+- When the page is rendered, dashboard/embed-app.lua puts app.R and the four
+  datasets into the shinylive-r block below. Only this page does that work, so
+  the rest of the website renders as before.
+- The loading bar is plain HTML and JavaScript (below). It follows the progress
+  messages that app.R prints in the browser and disappears when the first chart
+  is drawn. If loading stalls, it offers to show the dashboard anyway and lists
+  the last error messages. Opened as a file (file://), the dashboard cannot run,
+  and the loading screen says so.
+- search: false keeps the embedded app code out of the site's search index.
+-->
 
+```{=html}
+<style>
+#dashboard-app { position: relative; min-height: 420px; }
+.dash-loading {
+  --dash-bar: #2a78d6;
+  position: absolute; inset: 0; z-index: 20;
+  display: flex; justify-content: center; align-items: flex-start;
+  padding: 7rem 16px 0;
+  background: var(--bs-body-bg, #fff);
+  color: var(--bs-body-color, #212529);
+  transition: opacity .4s ease;
+}
+body.quarto-dark .dash-loading { --dash-bar: #3987e5; }
+.dash-loading.done { opacity: 0; pointer-events: none; }
+.dash-loading-inner { width: min(440px, 100%); }
+.dash-loading-label { font-weight: 600; font-size: 1rem; }
+.dash-loading-track {
+  height: 6px; margin: .65rem 0 .6rem; border-radius: 3px; overflow: hidden;
+  background: rgba(127, 127, 127, .25);
+}
+.dash-loading-bar {
+  position: relative; overflow: hidden;
+  width: 0; height: 100%; border-radius: 3px; background: var(--dash-bar);
+  transition: width .3s linear;
+}
+.dash-loading-bar::after {   /* a soft sheen that shows the page is still working */
+  content: ""; position: absolute; inset: 0;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, .35), transparent);
+  transform: translateX(-100%); animation: dash-sheen 1.6s ease-in-out infinite;
+}
+@keyframes dash-sheen { to { transform: translateX(100%); } }
+.dash-loading-note { font-size: .85rem; color: var(--bs-secondary-color, #6c757d); }
+.dash-loading-show {
+  margin-top: .9rem; padding: .3rem .8rem; font-size: .85rem; border-radius: 4px;
+  color: inherit; background: transparent; border: 1px solid rgba(127, 127, 127, .6); cursor: pointer;
+}
+.dash-loading-show:hover { border-color: currentColor; }
+.dash-loading-details { margin-top: .9rem; font-size: .8rem; color: var(--bs-secondary-color, #6c757d); }
+.dash-loading-details pre {
+  margin: .4rem 0 0; padding: .5rem; max-height: 10rem; overflow: auto; white-space: pre-wrap;
+  font-size: .75rem; background: rgba(127, 127, 127, .12); border-radius: 4px; color: inherit;
+}
+@media (prefers-reduced-motion: reduce) {
+  .dash-loading, .dash-loading-bar { transition: none; }
+  .dash-loading-bar::after { animation: none; }
+}
+</style>
+```
+
+::: {#dashboard-app}
+
+```{=html}
+<div class="dash-loading" aria-live="polite">
+  <div class="dash-loading-inner">
+    <div class="dash-loading-label">Loading the dashboard…</div>
+    <div class="dash-loading-track" role="progressbar" aria-label="Loading the dashboard"
+         aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+      <div class="dash-loading-bar"></div>
+    </div>
+    <div class="dash-loading-note">The first visit downloads R and its packages to your browser. Later visits are faster.</div>
+    <button type="button" class="dash-loading-show" hidden>Show the dashboard anyway</button>
+    <details class="dash-loading-details" hidden><summary>Technical details</summary><pre></pre></details>
+  </div>
+</div>
+```
+
+```{shinylive-r}
+#| standalone: true
+#| components: [viewer]
+#| viewerHeight: 1000
+## embed-app: dashboard/app.R
+## embed-data: TCS_NOR.RDS Ministers_NOR.RDS POLADV_NOR.RDS Governments_NOR.RDS
+```
+
+:::
+
+```{=html}
+<script>
+(function () {
+  var root = document.getElementById('dashboard-app');
+  var box = root && root.querySelector('.dash-loading');
+  if (!box) return;
+  var bar = box.querySelector('.dash-loading-bar');
+  var track = box.querySelector('.dash-loading-track');
+  var label = box.querySelector('.dash-loading-label');
+  var note = box.querySelector('.dash-loading-note');
+  var showButton = box.querySelector('.dash-loading-show');
+  var details = box.querySelector('.dash-loading-details');
+
+  // Loading happens in stages. Each stage fills part of the bar, easing towards
+  // its end until the next stage is reached, so the bar never moves backwards.
+  var order = ['start', 'r', 'data', 'app', 'connected'];
+  var stages = {
+    start:     { label: 'Downloading R for your browser…', end: 0.30, tau: 6 },
+    r:         { label: 'Loading R packages…',            end: 0.65, tau: 9 },
+    data:      { label: 'Preparing the data…',            end: 0.78, tau: 2 },
+    app:       { label: 'Starting the dashboard…',        end: 0.88, tau: 4 },
+    connected: { label: 'Drawing the charts…',            end: 0.99, tau: 3 }
+  };
+  var t0 = Date.now(), current = 'start', stageFrom = 0, stageT0 = t0;
+  var progress = 0, finished = false, helpShown = false;
+  var appAt = null, connectedAt = null, errors = [];
+
+  function show() {
+    bar.style.width = (100 * progress).toFixed(1) + '%';
+    track.setAttribute('aria-valuenow', String(Math.round(100 * progress)));
+  }
+  function setStage(key) {
+    if (finished || order.indexOf(key) <= order.indexOf(current)) return;
+    current = key; stageFrom = progress; stageT0 = Date.now();
+    if (key === 'app') appAt = stageT0;
+    label.textContent = stages[key].label;
+    track.setAttribute('aria-valuetext', stages[key].label);
+  }
+
+  // Keep the last few error messages, to show if loading stalls.
+  function remember(text) {
+    text = String(text || '').replace(/^preload (error|echo):/, '').trim();
+    if (!text || /Attaching package|is masked from|^page$|React DevTools/.test(text)) return;
+    errors.push(text.slice(0, 300));
+    if (errors.length > 6) errors.shift();
+  }
+  function showHelp(message) {
+    helpShown = true;
+    note.textContent = message;
+    showButton.hidden = false;
+    if (errors.length) {
+      details.hidden = false;
+      details.querySelector('pre').textContent = errors.join('\n');
+    }
+  }
+
+  // The app runs in R inside the browser; its start-up messages (and the
+  // progress messages in app.R) pass through the page console.
+  var methods = ['log', 'info', 'warn', 'error'], originals = {};
+  methods.forEach(function (m) {
+    originals[m] = console[m];
+    console[m] = function () {
+      try {
+        var text = Array.prototype.join.call(arguments, ' ');
+        if (text.indexOf('dashboard-progress:app') >= 0) setStage('app');
+        else if (text.indexOf('dashboard-progress:data') >= 0) setStage('data');
+        else if (text.indexOf('R version') >= 0) setStage('r');
+        else if (m === 'error' || m === 'warn') remember(text);
+      } catch (e) {}
+      return originals[m].apply(console, arguments);
+    };
+  });
+  window.addEventListener('error', function (e) {
+    var src = e.target && (e.target.src || e.target.href);
+    if (e.message) remember('Error: ' + e.message);
+    else if (src && src.indexOf(location.origin) === 0) remember('Could not load ' + src);
+  }, true);
+  window.addEventListener('unhandledrejection', function (e) {
+    remember('Error: ' + ((e.reason && e.reason.message) || e.reason));
+  });
+
+  function finish(fast) {
+    if (finished) return;
+    finished = true;
+    clearInterval(timer);
+    methods.forEach(function (m) { console[m] = originals[m]; });
+    progress = 1; show();
+    setTimeout(function () {
+      box.classList.add('done');
+      setTimeout(function () { box.remove(); }, 450);
+    }, fast ? 0 : 300);
+  }
+  showButton.addEventListener('click', function () { finish(true); });
+
+  // The dashboard is ready when its first chart is drawn. As a fallback, the
+  // loading screen also goes away shortly after the app is up, so it never
+  // covers a running dashboard.
+  function check() {
+    if (root.querySelector('.loading-wrapper-error')) return finish(true);   // let Shinylive show its error
+    var now = Date.now();
+    if (connectedAt && now - connectedAt > 5000) return finish();
+    if (appAt && now - appAt > 20000) return finish();
+    var frame = root.querySelector('iframe');
+    var w = null, d = null;
+    try { w = frame && frame.contentWindow; d = w && w.document; } catch (e) { return; }
+    if (!w || !d) return;
+    var connected = false;
+    try { connected = !!(w.Shiny && w.Shiny.shinyapp && w.Shiny.shinyapp.isConnected()); } catch (e) {}
+    if (connected) {
+      setStage('connected');
+      if (!connectedAt) connectedAt = now;
+    }
+    if (d.querySelector('.shiny-plot-output img')) finish();
+  }
+
+  function tick() {
+    if (finished) return;
+    var now = Date.now(), s = stages[current];
+    var p = stageFrom + (s.end - stageFrom) * (1 - Math.exp(-(now - stageT0) / 1000 / s.tau));
+    if (p > progress) progress = p;
+    show();
+    check();
+    if (finished || helpShown) return;
+    if (!root.querySelector('iframe') && now - t0 > 40000) {
+      label.textContent = 'The dashboard could not start';
+      showHelp('Something stopped it from starting. Reloading the page may help.');
+    } else if (now - t0 > 45000) {
+      showHelp('This is taking longer than usual. You can wait, reload the page, or show the dashboard as it is.');
+    }
+  }
+
+  // The dashboard runs R in the browser, which needs the page to come from a
+  // web address (the website or Quarto's preview), not from a file on disk.
+  if (location.protocol === 'file:' || !('serviceWorker' in navigator)) {
+    label.textContent = 'The dashboard cannot run here';
+    note.textContent = location.protocol === 'file:'
+      ? 'This page was opened as a file. The dashboard only runs when the page comes from a web address: the published website, or the preview that Quarto opens when you render the site.'
+      : 'This browser does not support the features the dashboard needs. Try a recent version of Chrome, Edge, Firefox or Safari.';
+    track.hidden = true;
+    return;
+  }
+
+  label.textContent = stages.start.label;
+  var timer = setInterval(tick, 200);
+})();
+</script>
+```

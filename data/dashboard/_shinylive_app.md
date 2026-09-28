@@ -331,10 +331,16 @@ css <- "
 [data-bs-theme=light] { --bs-border-color:#dcdbd4; }
 .card-header { font-weight:600; border-bottom:0; padding-bottom:0; }
 .dl-head { display:flex; align-items:baseline; flex-wrap:wrap; column-gap:1rem; }
+.bslib-card { container-type:inline-size; }
+@container (max-width: 480px) { .dl-links .dl-word { display:none; } }
 .dl-links { margin-left:auto; font-weight:400; font-size:.75rem; color:var(--bs-secondary-color); white-space:nowrap; }
 .dl-links a { color:var(--bs-secondary-color); margin-left:.55rem; text-decoration:underline; text-underline-offset:2px; }
 .dl-links a:hover { color:var(--bs-body-color); }
-.readout { font-size:.8rem; color:var(--bs-secondary-color); min-height:1.3em; font-variant-numeric:tabular-nums; }
+.readout { font-size:.8rem; line-height:1.5; color:var(--bs-secondary-color); min-height:3em; font-variant-numeric:tabular-nums;
+           display:flex; flex-direction:column; justify-content:flex-end; }
+.readout.lines-3 { min-height:4.5em; }
+@media (max-width: 575.98px) { .readout { min-height:4.5em; } .readout.lines-3 { min-height:6em; } }
+.readout .recalculating, .readout.recalculating { opacity:1 !important; transition:none !important; }
 .card-body .form-group, .card-body .shiny-input-container { margin-bottom:.2rem; }
 .card-body .shiny-options-group { font-size:.85rem; }
 .card-body .checkbox-inline, .card-body .form-check-inline { margin-right:1rem; }
@@ -424,6 +430,34 @@ js <- "
     window.addEventListener('resize', scheduleFit);
   });
   try { window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', apply); } catch (e) {}
+
+  // Hover readouts sit above their chart. If a readout grew and shrank with its
+  // text, the chart would jump under the pointer, which changes what is hovered
+  // and makes it jump again. Each readout therefore keeps the tallest height it
+  // has needed at the current width: it can grow once, but never shrinks back.
+  function holdReadouts() {
+    var els = document.querySelectorAll('.readout');
+    for (var i = 0; i < els.length; i++) {
+      var el = els[i], h = el.getBoundingClientRect().height;
+      if (h > 0 && h > (parseFloat(el.style.minHeight) || 0)) el.style.minHeight = h + 'px';
+    }
+  }
+  var readoutWidth = null;
+  function resetReadouts(width) {
+    if (width === readoutWidth) return;
+    readoutWidth = width;
+    var els = document.querySelectorAll('.readout');
+    for (var i = 0; i < els.length; i++) els[i].style.minHeight = '';
+    holdReadouts();
+  }
+  document.addEventListener('DOMContentLoaded', function () {
+    var main = document.querySelector('.bslib-sidebar-layout > .main');
+    try {
+      new MutationObserver(holdReadouts).observe(document.body, {childList: true, subtree: true, characterData: true});
+      if (main) new ResizeObserver(function () { resetReadouts(Math.round(main.clientWidth)); }).observe(main);
+    } catch (e) {}
+    if (window.jQuery) jQuery(document).on('shown.bs.tab', function () { setTimeout(holdReadouts, 0); });
+  });
 })();
 "
 
@@ -446,29 +480,36 @@ level_choices <- c(
   "All levels" = "all", "Level 1 (both types)" = "l1", "Level 1: Permanent Secretary" = "1",
   "Level 1: Director General (no Permanent Secretary)" = "2", "Level 2: Director General" = "3")
 
+# Source line printed under every downloaded chart (split over two lines to fit)
+data_source <- paste(
+  "Data: Forum, B. M. (2026). Bureaucratic turnover under new governments: The moderating effect of bureaucratic and political layering.",
+  "Journal of Public Administration Research and Theory, 36(4), 429\u2013446. https://doi.org/10.1093/jopart/muag016",
+  sep = "\n")
+
 # Chrome ignores the service worker that runs the in-browser app for links with
 # a `download` attribute (Chromium issue 468227), so the attribute is removed.
 # The server still sends the file as an attachment with the right file name.
 dl_link <- function(id, label) {
   tag <- downloadLink(id, label)
   tag$attribs$download <- NULL
+  tag$attribs$title <- paste("Download this chart as", label)
   tag
 }
 
 download_links <- function(plot_id) {
-  span(class = "dl-links", "Download",
+  span(class = "dl-links", span(class = "dl-word", "Download"),
        dl_link(paste0(plot_id, "_png"), "PNG"),
        dl_link(paste0(plot_id, "_pdf"), "PDF"))
 }
 
-chart_card <- function(title, plot_id, readout_id, height = 300, note = NULL, controls = NULL) {
+chart_card <- function(title, plot_id, readout_id, height = 300, note = NULL, controls = NULL, readout_lines = 2) {
   card(
     card_header(class = "dl-head", span(title), download_links(plot_id)),
     card_body(
       class = "pt-1", gap = "0.3rem",
       controls,
       uiOutput(paste0(plot_id, "_legend")),
-      div(class = "readout", uiOutput(readout_id, inline = TRUE)),
+      div(class = paste0("readout lines-", readout_lines), uiOutput(readout_id, inline = TRUE)),
       plotOutput(plot_id, height = height, hover = hover(paste0(plot_id, "_hover")), fill = FALSE),
       if (!is.null(note)) div(class = "note", note)
     )
@@ -535,8 +576,8 @@ ui <- page_sidebar(
       "Top civil servants", value = "tcs",
       layout_columns(
         col_widths = breakpoints(sm = 12, lg = c(6, 6)),
-        chart_card("Top civil servants by position", "p_pos", "r_pos"),
-        chart_card("Main field of education", "p_edu", "r_edu")
+        chart_card("Top civil servants by position", "p_pos", "r_pos", readout_lines = 3),
+        chart_card("Main field of education", "p_edu", "r_edu", readout_lines = 3)
       ),
       chart_card(
         "Share with a political background", "p_pol", "r_pol", height = 260,
@@ -553,7 +594,7 @@ ui <- page_sidebar(
     ),
     nav_panel(
       "Turnover", value = "turnover",
-      chart_card("Share leaving office each year", "p_turn", "r_turn", height = 280,
+      chart_card("Share leaving office each year", "p_turn", "r_turn", height = 280, readout_lines = 3,
                  controls = checkboxGroupInput("turn_show", NULL, inline = TRUE, choices = c("Top civil servants", "Ministers", "State secretaries", "Political advisors"), selected = c("Top civil servants", "Ministers", "State secretaries", "Political advisors")),
                  note = paste("Share of those in office on 1 January who left the position during the year.",
                               "Top civil servants leave when they are absent from the data for at least one year; ministers when they leave the cabinet;",
@@ -674,9 +715,9 @@ server <- function(input, output, session) {
     selection <- function() {
       tab <- if (is.null(input$tab)) "" else input$tab
       y <- yrs()
-      x <- c(if (tab == "office") paste("Year:", input$year1)
-             else if (tab == "nextpos") paste0("Exits: ", max(y[1], 2011), "-", y[2], " (next positions are recorded from 2011)")
-             else paste0("Years: ", y[1], "-", y[2]),
+      x <- c(if (tab == "office") paste0("Norway, 1 January ", input$year1)
+             else if (tab == "nextpos") paste0("Norway, exits ", max(y[1], 2011), "\u2013", y[2], " (next positions are recorded from 2011)")
+             else paste0("Norway, ", y[1], "\u2013", y[2]),
              if (!(tab == "governments" && identical(input$gov_sub, "cabinets"))) paste("Ministry:", input$portfolio),
              if (tab %in% c("tcs", "turnover", "nextpos") && !is.null(input$level) && input$level != "all")
                paste("Top civil servants:", names(level_choices)[level_choices == input$level]))
@@ -687,9 +728,7 @@ server <- function(input, output, session) {
       on.exit(exporting$on <- FALSE)
       p <- pal$light
       fn() +
-        labs(title = ttl(), caption = paste(c(caption, paste0(selection(), "."),
-                                             "Data: Forum (2026), Journal of Public Administration Research and Theory. bjornforum.github.io/data"),
-                                           collapse = "\n")) +
+        labs(title = ttl(), caption = paste(c(caption, paste0(selection(), "."), data_source), collapse = "\n")) +
         theme(legend.position = "top", legend.justification = "left", legend.title = element_blank(),
               legend.text = element_text(colour = p$ink2, size = 10),
               plot.title = element_text(face = "bold", size = 13, colour = p$ink, margin = margin(0, 0, 6, 0)),
@@ -697,7 +736,11 @@ server <- function(input, output, session) {
               plot.caption = element_text(colour = p$ink2, size = 8, hjust = 0, lineheight = 1.1),
               plot.margin = margin(12, 16, 10, 12))
     }
-    fname <- function(ext) paste0(gsub("(^-|-$)", "", gsub("[^a-z0-9]+", "-", tolower(ttl()))), ".", ext)
+    fname <- function(ext) {
+      slug <- gsub("(^-|-$)", "", gsub("[^a-z0-9]+", "-", tolower(ttl())))
+      if (!grepl("^norw", slug)) slug <- paste0("norway-", slug)
+      paste0(slug, ".", ext)
+    }
     output[[paste0(id, "_png")]] <- downloadHandler(
       filename = function() fname("png"),
       content = function(file) {
@@ -708,7 +751,7 @@ server <- function(input, output, session) {
       filename = function() fname("pdf"),
       content = function(file) {
         g <- export_plot()
-        grDevices::pdf(file, width = width, height = height)
+        grDevices::pdf(file, width = width, height = height, encoding = "WinAnsi.enc")
         on.exit(grDevices::dev.off())
         print(g)
       })

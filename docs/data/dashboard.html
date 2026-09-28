@@ -356,7 +356,77 @@ gtag('config', 'G-9T1C506XN5', { 'anonymize_ip': true});
 
 
 <p>Explore historical data on top civil servants, governments, ministers, state secretaries and political advisors in Norway. The dashboard runs in your browser, so it can take up to half a minute to load the first time. The datasets, codebook and citation are on the <a href="../data/data.html">Data page</a>. Disclaimer: The dashboard is currently being beta-tested, so errors in visualizations and statistics may occur.</p>
-<!-- The app code and data are inserted by dashboard/build_dashboard.R, which Quarto runs before every render (see pre-render in _quarto.yml). Edit dashboard/app.R, not the generated file. -->
+<!--
+How this page works:
+- The dashboard itself is dashboard/app.R. Edit that file, not this page.
+- When the page is rendered, dashboard/embed-app.lua puts app.R and the four
+  datasets into the shinylive-r block below. Only this page does that work, so
+  the rest of the website renders as before.
+- The loading bar is plain HTML and JavaScript (below). It follows the progress
+  messages that app.R prints in the browser and disappears when the first chart
+  is drawn. If loading stalls, it offers to show the dashboard anyway and lists
+  the last error messages. Opened as a file (file://), the dashboard cannot run,
+  and the loading screen says so.
+- search: false keeps the embedded app code out of the site's search index.
+-->
+<style>
+#dashboard-app { position: relative; min-height: 420px; }
+.dash-loading {
+  --dash-bar: #2a78d6;
+  position: absolute; inset: 0; z-index: 20;
+  display: flex; justify-content: center; align-items: flex-start;
+  padding: 7rem 16px 0;
+  background: var(--bs-body-bg, #fff);
+  color: var(--bs-body-color, #212529);
+  transition: opacity .4s ease;
+}
+body.quarto-dark .dash-loading { --dash-bar: #3987e5; }
+.dash-loading.done { opacity: 0; pointer-events: none; }
+.dash-loading-inner { width: min(440px, 100%); }
+.dash-loading-label { font-weight: 600; font-size: 1rem; }
+.dash-loading-track {
+  height: 6px; margin: .65rem 0 .6rem; border-radius: 3px; overflow: hidden;
+  background: rgba(127, 127, 127, .25);
+}
+.dash-loading-bar {
+  position: relative; overflow: hidden;
+  width: 0; height: 100%; border-radius: 3px; background: var(--dash-bar);
+  transition: width .3s linear;
+}
+.dash-loading-bar::after {   /* a soft sheen that shows the page is still working */
+  content: ""; position: absolute; inset: 0;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, .35), transparent);
+  transform: translateX(-100%); animation: dash-sheen 1.6s ease-in-out infinite;
+}
+@keyframes dash-sheen { to { transform: translateX(100%); } }
+.dash-loading-note { font-size: .85rem; color: var(--bs-secondary-color, #6c757d); }
+.dash-loading-show {
+  margin-top: .9rem; padding: .3rem .8rem; font-size: .85rem; border-radius: 4px;
+  color: inherit; background: transparent; border: 1px solid rgba(127, 127, 127, .6); cursor: pointer;
+}
+.dash-loading-show:hover { border-color: currentColor; }
+.dash-loading-details { margin-top: .9rem; font-size: .8rem; color: var(--bs-secondary-color, #6c757d); }
+.dash-loading-details pre {
+  margin: .4rem 0 0; padding: .5rem; max-height: 10rem; overflow: auto; white-space: pre-wrap;
+  font-size: .75rem; background: rgba(127, 127, 127, .12); border-radius: 4px; color: inherit;
+}
+@media (prefers-reduced-motion: reduce) {
+  .dash-loading, .dash-loading-bar { transition: none; }
+  .dash-loading-bar::after { animation: none; }
+}
+</style>
+<div id="dashboard-app">
+<div class="dash-loading" aria-live="polite">
+  <div class="dash-loading-inner">
+    <div class="dash-loading-label">Loading the dashboard…</div>
+    <div class="dash-loading-track" role="progressbar" aria-label="Loading the dashboard" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+      <div class="dash-loading-bar"></div>
+    </div>
+    <div class="dash-loading-note">The first visit downloads R and its packages to your browser. Later visits are faster.</div>
+    <button type="button" class="dash-loading-show" hidden="">Show the dashboard anyway</button>
+    <details class="dash-loading-details" hidden=""><summary>Technical details</summary><pre></pre></details>
+  </div>
+</div>
 <pre class="shinylive-r" data-engine="r"><code>#| '!! shinylive warning !!': |
 #|   shinylive does not work in self-contained HTML documents.
 #|   Please set `embed-resources: false` in your metadata.
@@ -373,6 +443,12 @@ gtag('config', 'G-9T1C506XN5', { 'anonymize_ip': true});
 library(shiny)
 library(bslib)
 library(ggplot2)
+
+# Tells the loading bar on the dashboard page how far the app has come.
+# Only used in the browser (webR); silent when the app runs in ordinary R.
+progress_step &lt;- function(step) {
+  if (identical(R.version$os, "emscripten")) message("dashboard-progress:", step)
+}
 
 # ---------------------------------------------------------------------------
 # Data
@@ -624,6 +700,7 @@ load_all &lt;- function() {
        first_year = min(people$year), last_year = max(people$year))
 }
 
+progress_step("data")
 dat &lt;- tryCatch(load_all(), error = function(e) e)
 ok &lt;- !inherits(dat, "error")
 
@@ -692,10 +769,16 @@ css &lt;- "
 [data-bs-theme=light] { --bs-border-color:#dcdbd4; }
 .card-header { font-weight:600; border-bottom:0; padding-bottom:0; }
 .dl-head { display:flex; align-items:baseline; flex-wrap:wrap; column-gap:1rem; }
+.bslib-card { container-type:inline-size; }
+@container (max-width: 480px) { .dl-links .dl-word { display:none; } }
 .dl-links { margin-left:auto; font-weight:400; font-size:.75rem; color:var(--bs-secondary-color); white-space:nowrap; }
 .dl-links a { color:var(--bs-secondary-color); margin-left:.55rem; text-decoration:underline; text-underline-offset:2px; }
 .dl-links a:hover { color:var(--bs-body-color); }
-.readout { font-size:.8rem; color:var(--bs-secondary-color); min-height:1.3em; font-variant-numeric:tabular-nums; }
+.readout { font-size:.8rem; line-height:1.5; color:var(--bs-secondary-color); min-height:3em; font-variant-numeric:tabular-nums;
+           display:flex; flex-direction:column; justify-content:flex-end; }
+.readout.lines-3 { min-height:4.5em; }
+@media (max-width: 575.98px) { .readout { min-height:4.5em; } .readout.lines-3 { min-height:6em; } }
+.readout .recalculating, .readout.recalculating { opacity:1 !important; transition:none !important; }
 .card-body .form-group, .card-body .shiny-input-container { margin-bottom:.2rem; }
 .card-body .shiny-options-group { font-size:.85rem; }
 .card-body .checkbox-inline, .card-body .form-check-inline { margin-right:1rem; }
@@ -785,6 +868,34 @@ js &lt;- "
     window.addEventListener('resize', scheduleFit);
   });
   try { window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', apply); } catch (e) {}
+
+  // Hover readouts sit above their chart. If a readout grew and shrank with its
+  // text, the chart would jump under the pointer, which changes what is hovered
+  // and makes it jump again. Each readout therefore keeps the tallest height it
+  // has needed at the current width: it can grow once, but never shrinks back.
+  function holdReadouts() {
+    var els = document.querySelectorAll('.readout');
+    for (var i = 0; i &lt; els.length; i++) {
+      var el = els[i], h = el.getBoundingClientRect().height;
+      if (h &gt; 0 &amp;&amp; h &gt; (parseFloat(el.style.minHeight) || 0)) el.style.minHeight = h + 'px';
+    }
+  }
+  var readoutWidth = null;
+  function resetReadouts(width) {
+    if (width === readoutWidth) return;
+    readoutWidth = width;
+    var els = document.querySelectorAll('.readout');
+    for (var i = 0; i &lt; els.length; i++) els[i].style.minHeight = '';
+    holdReadouts();
+  }
+  document.addEventListener('DOMContentLoaded', function () {
+    var main = document.querySelector('.bslib-sidebar-layout &gt; .main');
+    try {
+      new MutationObserver(holdReadouts).observe(document.body, {childList: true, subtree: true, characterData: true});
+      if (main) new ResizeObserver(function () { resetReadouts(Math.round(main.clientWidth)); }).observe(main);
+    } catch (e) {}
+    if (window.jQuery) jQuery(document).on('shown.bs.tab', function () { setTimeout(holdReadouts, 0); });
+  });
 })();
 "
 
@@ -807,29 +918,36 @@ level_choices &lt;- c(
   "All levels" = "all", "Level 1 (both types)" = "l1", "Level 1: Permanent Secretary" = "1",
   "Level 1: Director General (no Permanent Secretary)" = "2", "Level 2: Director General" = "3")
 
+# Source line printed under every downloaded chart (split over two lines to fit)
+data_source &lt;- paste(
+  "Data: Forum, B. M. (2026). Bureaucratic turnover under new governments: The moderating effect of bureaucratic and political layering.",
+  "Journal of Public Administration Research and Theory, 36(4), 429\u2013446. https://doi.org/10.1093/jopart/muag016",
+  sep = "\n")
+
 # Chrome ignores the service worker that runs the in-browser app for links with
 # a `download` attribute (Chromium issue 468227), so the attribute is removed.
 # The server still sends the file as an attachment with the right file name.
 dl_link &lt;- function(id, label) {
   tag &lt;- downloadLink(id, label)
   tag$attribs$download &lt;- NULL
+  tag$attribs$title &lt;- paste("Download this chart as", label)
   tag
 }
 
 download_links &lt;- function(plot_id) {
-  span(class = "dl-links", "Download",
+  span(class = "dl-links", span(class = "dl-word", "Download"),
        dl_link(paste0(plot_id, "_png"), "PNG"),
        dl_link(paste0(plot_id, "_pdf"), "PDF"))
 }
 
-chart_card &lt;- function(title, plot_id, readout_id, height = 300, note = NULL, controls = NULL) {
+chart_card &lt;- function(title, plot_id, readout_id, height = 300, note = NULL, controls = NULL, readout_lines = 2) {
   card(
     card_header(class = "dl-head", span(title), download_links(plot_id)),
     card_body(
       class = "pt-1", gap = "0.3rem",
       controls,
       uiOutput(paste0(plot_id, "_legend")),
-      div(class = "readout", uiOutput(readout_id, inline = TRUE)),
+      div(class = paste0("readout lines-", readout_lines), uiOutput(readout_id, inline = TRUE)),
       plotOutput(plot_id, height = height, hover = hover(paste0(plot_id, "_hover")), fill = FALSE),
       if (!is.null(note)) div(class = "note", note)
     )
@@ -896,8 +1014,8 @@ ui &lt;- page_sidebar(
       "Top civil servants", value = "tcs",
       layout_columns(
         col_widths = breakpoints(sm = 12, lg = c(6, 6)),
-        chart_card("Top civil servants by position", "p_pos", "r_pos"),
-        chart_card("Main field of education", "p_edu", "r_edu")
+        chart_card("Top civil servants by position", "p_pos", "r_pos", readout_lines = 3),
+        chart_card("Main field of education", "p_edu", "r_edu", readout_lines = 3)
       ),
       chart_card(
         "Share with a political background", "p_pol", "r_pol", height = 260,
@@ -914,7 +1032,7 @@ ui &lt;- page_sidebar(
     ),
     nav_panel(
       "Turnover", value = "turnover",
-      chart_card("Share leaving office each year", "p_turn", "r_turn", height = 280,
+      chart_card("Share leaving office each year", "p_turn", "r_turn", height = 280, readout_lines = 3,
                  controls = checkboxGroupInput("turn_show", NULL, inline = TRUE, choices = c("Top civil servants", "Ministers", "State secretaries", "Political advisors"), selected = c("Top civil servants", "Ministers", "State secretaries", "Political advisors")),
                  note = paste("Share of those in office on 1 January who left the position during the year.",
                               "Top civil servants leave when they are absent from the data for at least one year; ministers when they leave the cabinet;",
@@ -1035,9 +1153,9 @@ server &lt;- function(input, output, session) {
     selection &lt;- function() {
       tab &lt;- if (is.null(input$tab)) "" else input$tab
       y &lt;- yrs()
-      x &lt;- c(if (tab == "office") paste("Year:", input$year1)
-             else if (tab == "nextpos") paste0("Exits: ", max(y[1], 2011), "-", y[2], " (next positions are recorded from 2011)")
-             else paste0("Years: ", y[1], "-", y[2]),
+      x &lt;- c(if (tab == "office") paste0("Norway, 1 January ", input$year1)
+             else if (tab == "nextpos") paste0("Norway, exits ", max(y[1], 2011), "\u2013", y[2], " (next positions are recorded from 2011)")
+             else paste0("Norway, ", y[1], "\u2013", y[2]),
              if (!(tab == "governments" &amp;&amp; identical(input$gov_sub, "cabinets"))) paste("Ministry:", input$portfolio),
              if (tab %in% c("tcs", "turnover", "nextpos") &amp;&amp; !is.null(input$level) &amp;&amp; input$level != "all")
                paste("Top civil servants:", names(level_choices)[level_choices == input$level]))
@@ -1048,9 +1166,7 @@ server &lt;- function(input, output, session) {
       on.exit(exporting$on &lt;- FALSE)
       p &lt;- pal$light
       fn() +
-        labs(title = ttl(), caption = paste(c(caption, paste0(selection(), "."),
-                                             "Data: Forum (2026), Journal of Public Administration Research and Theory. bjornforum.github.io/data"),
-                                           collapse = "\n")) +
+        labs(title = ttl(), caption = paste(c(caption, paste0(selection(), "."), data_source), collapse = "\n")) +
         theme(legend.position = "top", legend.justification = "left", legend.title = element_blank(),
               legend.text = element_text(colour = p$ink2, size = 10),
               plot.title = element_text(face = "bold", size = 13, colour = p$ink, margin = margin(0, 0, 6, 0)),
@@ -1058,7 +1174,11 @@ server &lt;- function(input, output, session) {
               plot.caption = element_text(colour = p$ink2, size = 8, hjust = 0, lineheight = 1.1),
               plot.margin = margin(12, 16, 10, 12))
     }
-    fname &lt;- function(ext) paste0(gsub("(^-|-$)", "", gsub("[^a-z0-9]+", "-", tolower(ttl()))), ".", ext)
+    fname &lt;- function(ext) {
+      slug &lt;- gsub("(^-|-$)", "", gsub("[^a-z0-9]+", "-", tolower(ttl())))
+      if (!grepl("^norw", slug)) slug &lt;- paste0("norway-", slug)
+      paste0(slug, ".", ext)
+    }
     output[[paste0(id, "_png")]] &lt;- downloadHandler(
       filename = function() fname("png"),
       content = function(file) {
@@ -1069,7 +1189,7 @@ server &lt;- function(input, output, session) {
       filename = function() fname("pdf"),
       content = function(file) {
         g &lt;- export_plot()
-        grDevices::pdf(file, width = width, height = height)
+        grDevices::pdf(file, width = width, height = height, encoding = "WinAnsi.enc")
         on.exit(grDevices::dev.off())
         print(g)
       })
@@ -1870,6 +1990,7 @@ server &lt;- function(input, output, session) {
   }, striped = FALSE, hover = TRUE, spacing = "xs", width = "100%", na = "")
 }
 
+progress_step("app")
 shinyApp(ui, server)
 ## file: TCS_NOR.RDS
 ## type: binary
@@ -1883,6 +2004,152 @@ H4sIAAAAAAAABuz9CZgcWXYQCquqshYttWrp7pl5dgHPPLNUo7UlGRtU1aqla5HalSXJ4wUmShmVGZWR
 ## file: Governments_NOR.RDS
 ## type: binary
 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</code></pre>
+</div>
+<script>
+(function () {
+  var root = document.getElementById('dashboard-app');
+  var box = root && root.querySelector('.dash-loading');
+  if (!box) return;
+  var bar = box.querySelector('.dash-loading-bar');
+  var track = box.querySelector('.dash-loading-track');
+  var label = box.querySelector('.dash-loading-label');
+  var note = box.querySelector('.dash-loading-note');
+  var showButton = box.querySelector('.dash-loading-show');
+  var details = box.querySelector('.dash-loading-details');
+
+  // Loading happens in stages. Each stage fills part of the bar, easing towards
+  // its end until the next stage is reached, so the bar never moves backwards.
+  var order = ['start', 'r', 'data', 'app', 'connected'];
+  var stages = {
+    start:     { label: 'Downloading R for your browser…', end: 0.30, tau: 6 },
+    r:         { label: 'Loading R packages…',            end: 0.65, tau: 9 },
+    data:      { label: 'Preparing the data…',            end: 0.78, tau: 2 },
+    app:       { label: 'Starting the dashboard…',        end: 0.88, tau: 4 },
+    connected: { label: 'Drawing the charts…',            end: 0.99, tau: 3 }
+  };
+  var t0 = Date.now(), current = 'start', stageFrom = 0, stageT0 = t0;
+  var progress = 0, finished = false, helpShown = false;
+  var appAt = null, connectedAt = null, errors = [];
+
+  function show() {
+    bar.style.width = (100 * progress).toFixed(1) + '%';
+    track.setAttribute('aria-valuenow', String(Math.round(100 * progress)));
+  }
+  function setStage(key) {
+    if (finished || order.indexOf(key) <= order.indexOf(current)) return;
+    current = key; stageFrom = progress; stageT0 = Date.now();
+    if (key === 'app') appAt = stageT0;
+    label.textContent = stages[key].label;
+    track.setAttribute('aria-valuetext', stages[key].label);
+  }
+
+  // Keep the last few error messages, to show if loading stalls.
+  function remember(text) {
+    text = String(text || '').replace(/^preload (error|echo):/, '').trim();
+    if (!text || /Attaching package|is masked from|^page$|React DevTools/.test(text)) return;
+    errors.push(text.slice(0, 300));
+    if (errors.length > 6) errors.shift();
+  }
+  function showHelp(message) {
+    helpShown = true;
+    note.textContent = message;
+    showButton.hidden = false;
+    if (errors.length) {
+      details.hidden = false;
+      details.querySelector('pre').textContent = errors.join('\n');
+    }
+  }
+
+  // The app runs in R inside the browser; its start-up messages (and the
+  // progress messages in app.R) pass through the page console.
+  var methods = ['log', 'info', 'warn', 'error'], originals = {};
+  methods.forEach(function (m) {
+    originals[m] = console[m];
+    console[m] = function () {
+      try {
+        var text = Array.prototype.join.call(arguments, ' ');
+        if (text.indexOf('dashboard-progress:app') >= 0) setStage('app');
+        else if (text.indexOf('dashboard-progress:data') >= 0) setStage('data');
+        else if (text.indexOf('R version') >= 0) setStage('r');
+        else if (m === 'error' || m === 'warn') remember(text);
+      } catch (e) {}
+      return originals[m].apply(console, arguments);
+    };
+  });
+  window.addEventListener('error', function (e) {
+    var src = e.target && (e.target.src || e.target.href);
+    if (e.message) remember('Error: ' + e.message);
+    else if (src && src.indexOf(location.origin) === 0) remember('Could not load ' + src);
+  }, true);
+  window.addEventListener('unhandledrejection', function (e) {
+    remember('Error: ' + ((e.reason && e.reason.message) || e.reason));
+  });
+
+  function finish(fast) {
+    if (finished) return;
+    finished = true;
+    clearInterval(timer);
+    methods.forEach(function (m) { console[m] = originals[m]; });
+    progress = 1; show();
+    setTimeout(function () {
+      box.classList.add('done');
+      setTimeout(function () { box.remove(); }, 450);
+    }, fast ? 0 : 300);
+  }
+  showButton.addEventListener('click', function () { finish(true); });
+
+  // The dashboard is ready when its first chart is drawn. As a fallback, the
+  // loading screen also goes away shortly after the app is up, so it never
+  // covers a running dashboard.
+  function check() {
+    if (root.querySelector('.loading-wrapper-error')) return finish(true);   // let Shinylive show its error
+    var now = Date.now();
+    if (connectedAt && now - connectedAt > 5000) return finish();
+    if (appAt && now - appAt > 20000) return finish();
+    var frame = root.querySelector('iframe');
+    var w = null, d = null;
+    try { w = frame && frame.contentWindow; d = w && w.document; } catch (e) { return; }
+    if (!w || !d) return;
+    var connected = false;
+    try { connected = !!(w.Shiny && w.Shiny.shinyapp && w.Shiny.shinyapp.isConnected()); } catch (e) {}
+    if (connected) {
+      setStage('connected');
+      if (!connectedAt) connectedAt = now;
+    }
+    if (d.querySelector('.shiny-plot-output img')) finish();
+  }
+
+  function tick() {
+    if (finished) return;
+    var now = Date.now(), s = stages[current];
+    var p = stageFrom + (s.end - stageFrom) * (1 - Math.exp(-(now - stageT0) / 1000 / s.tau));
+    if (p > progress) progress = p;
+    show();
+    check();
+    if (finished || helpShown) return;
+    if (!root.querySelector('iframe') && now - t0 > 40000) {
+      label.textContent = 'The dashboard could not start';
+      showHelp('Something stopped it from starting. Reloading the page may help.');
+    } else if (now - t0 > 45000) {
+      showHelp('This is taking longer than usual. You can wait, reload the page, or show the dashboard as it is.');
+    }
+  }
+
+  // The dashboard runs R in the browser, which needs the page to come from a
+  // web address (the website or Quarto's preview), not from a file on disk.
+  if (location.protocol === 'file:' || !('serviceWorker' in navigator)) {
+    label.textContent = 'The dashboard cannot run here';
+    note.textContent = location.protocol === 'file:'
+      ? 'This page was opened as a file. The dashboard only runs when the page comes from a web address: the published website, or the preview that Quarto opens when you render the site.'
+      : 'This browser does not support the features the dashboard needs. Try a recent version of Chrome, Edge, Firefox or Safari.';
+    track.hidden = true;
+    return;
+  }
+
+  label.textContent = stages.start.label;
+  var timer = setInterval(tick, 200);
+})();
+</script>
 
 
 
