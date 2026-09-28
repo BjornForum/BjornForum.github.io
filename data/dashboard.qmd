@@ -1,0 +1,14 @@
+---
+title: "Dashboard (Beta)"
+engine: markdown
+page-layout: full
+toc: false
+filters:
+  - shinylive
+---
+
+Explore historical data on top civil servants, governments, ministers, state secretaries and political advisors in Norway. The dashboard runs in your browser, so it can take up to half a minute to load the first time. The datasets, codebook and citation are on the [Data page](data.qmd). Disclaimer: The dashboard is currently being beta-tested, so errors in visualizations and statistics may occur.
+
+<!-- The app code and data are inserted by dashboard/build_dashboard.R, which Quarto runs before every render (see pre-render in _quarto.yml). Edit dashboard/app.R, not the generated file. -->
+{{< include dashboard/_shinylive_app.md >}}
+

@@ -1,7 +1,7 @@
 ---
 title: Curriculum Vitæ
 description: "Bjørn Mo Forum's CV"
-date: 2026-05-12
+date: 2026-09-27
 published-title: CV last updated
 engine: knitr
 freeze: false

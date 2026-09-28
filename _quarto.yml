@@ -1,6 +1,7 @@
 project:
   type: website
   output-dir: docs
+  pre-render: data/dashboard/build_dashboard.R
 
 website:
   google-analytics: "G-9T1C506XN5"
@@ -33,6 +34,8 @@ website:
         text: "Research"
       - href: data/data.qmd
         text: "Data"
+      - href: data/dashboard.qmd
+        text: "Dashboard (Beta)"
       - href: teaching/teaching.qmd
         text: "Teaching"
       - href: blog/blog.qmd

@@ -1,7 +1,24 @@
-Links to datasets and dashboard on Norwegian governments, ministers, political appointees and senior bureaucrats are coming soon.. Some datasets are currently available  [here](../teaching/teaching.qmd).
+---
+title: "Data"
+---
 
-![](numberofseniorbureaucrats.png){}
+## Datasets
+### Norwegian Executive Triangle 1884-2026
+This section provides data on the top civil servants in Norwegian ministries and on the political executive they serve: governments, ministers, state secretaries and political advisors since 1884. Each dataset can be downloaded as an R data file (RDS) or as a comma-separated file (CSV). Variables, sources and the procedure for linking people, ministries and governments across the datasets are documented in the [codebook](codebook.pdf){target="_blank"}. Datasets were last updated in September 2026. You can also explore the data in an interactive [dashboard](dashboard.qmd).
 
-![](sequence_year_3pos.png){}
+::: {.table-responsive}
+| Dataset | Unit of Analysis | Period | Download |
+|:--------|:--------|:-------|:---------|
+| **TCS_NOR** | Top civil servants in Norwegian ministries: Permanent Secretaries (departementsråder), Assistant Permanent Secretaries (assisterende departementsråder) and Directors General (ekspedisjonssjefer). 959 individuals, one row per civil servant per year. | 1884–2025 | [RDS](TCS_NOR.RDS){download="TCS_NOR.RDS"} · [CSV](TCS_NOR.csv){download="TCS_NOR.csv"} |
+| **Governments_NOR** | Norwegian governments. 79 cabinets, one row per cabinet (a new cabinet is counted when the Prime Minister changes, when parties join or leave, and after elections). | 1884–2026 | [RDS](Governments_NOR.RDS){download="Governments_NOR.RDS"} · [CSV](Governments_NOR.csv){download="Governments_NOR.csv"} |
+| **Ministers_NOR** | Norwegian cabinet ministers. 573 individuals, one row per ministerial post. | 1884–2026 | [RDS](Ministers_NOR.RDS){download="Ministers_NOR.RDS"} · [CSV](Ministers_NOR.csv){download="Ministers_NOR.csv"} |
+| **POLADV_NOR** | State secretaries (statssekretærer) and political advisors (politiske rådgivere). 1,364 individuals, one row per appointment. | 1945–2026 | [RDS](POLADV_NOR.RDS){download="POLADV_NOR.RDS"} · [CSV](POLADV_NOR.csv){download="POLADV_NOR.csv"} |
+:::
 
-![](education.png){}
+If you use any of these datasets, please cite:
+
+> Forum, B. M. (2026). Bureaucratic turnover under new governments: The moderating effect of bureaucratic and political layering. *Journal of Public Administration Research and Theory*, 36(4), 429–446. [https://doi.org/10.1093/jopart/muag016](https://doi.org/10.1093/jopart/muag016){target="_blank"}
+
+
+## Replication files
+- Forum, B. M. (2025). *Replication data for: Bureaucratic turnover under new governments: The moderating effect of bureaucratic and political layering*, [https://doi.org/10.7910/DVN/IUXUPR](https://doi.org/10.7910/DVN/IUXUPR){target="_blank"}

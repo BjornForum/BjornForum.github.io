@@ -8,7 +8,7 @@ title: "Teaching"
 - Rekruttering av topplederne i forvaltningen: mellom meritokrati og politisering [27.01.2026](Forelesning_5_27.01.2026_STV4436.pdf){target="_blank"}
   - Innsamling av karrieredata på toppbyråkrater: Tips og Triks [27.01.2026](Forelesning_5_Ekstramateriale_innsamling av karrieredata på toppbyråkrater_STV4436.pdf){target="_blank"}
 
-### Datasets
+### Data made available for use in term papers 
 - [Norwegian Politicians](all_politicians.RDS){target="_blank"}: An individual level dataset of 244,430 political experience (minister, state secretary, political advisor, parliamentarian candidates, local and regional candidates).
 
 ```{=html}
