@@ -632,9 +632,7 @@ ui <- page_sidebar(
                    "Election year without a change of government vs. other years" = "election",
                    "All three groups" = "all")),
                  note = paste("Share of exits going to each type of position, by the kind of year in which the civil servant left.",
-                              "Other years are years with neither an election nor a change of the Prime Minister's party.")),
-      card(card_header("Top civil servants who left office, with their next position"),
-           card_body(div(class = "office-table", tableOutput("t_np"))))
+                              "Other years are years with neither an election nor a change of the Prime Minister's party."))
     ),
     nav_panel(
       "Governments", value = "governments",
@@ -1233,14 +1231,6 @@ server <- function(input, output, session) {
     paste0("Years when the Prime Minister's party changed: ", if (length(yc)) paste(yc, collapse = ", ") else "none",
            ". Election years without a change: ", if (length(ye)) paste(ye, collapse = ", ") else "none", ".")
   })
-
-  output$t_np <- renderTable({
-    d <- np_sel()
-    validate(need(nrow(d) > 0, "No recorded next positions for this selection."))
-    d <- d[order(-d$year, d$name), ]
-    data.frame(Name = d$name, Position = as.character(d$position), Ministry = d$ministry,
-               `Year left` = as.character(d$year), `Next position` = d$next_short, check.names = FALSE)
-  }, striped = FALSE, hover = TRUE, spacing = "xs", width = "100%", na = "")
 
   # ---- Governments -------------------------------------------------------
   gov_sel <- reactive({
